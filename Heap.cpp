@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void swap(int *x, int *y);
+void swap(int &x, int &y);
 
 class Heap {
 private:
@@ -26,43 +26,42 @@ public:
         capacity = 0;
     }
 
-
-    int parent(int i) { return (i - 1) / 2; }
-
-    int left(int i) { return (2 * i + 1); }
-
-    int right(int i) { return (2 * i + 2); }
-
     int extractMin();
-
     void insertKey(int k);
+
+    int getSize() const{
+        return heapSize;
+    };
+
+private:
+    static int parent(int i) { return (i - 1) / 2; }
+
+    static int left(int i) { return (2 * i + 1); }
+
+    static int right(int i) { return (2 * i + 2); }
 
     void siftUp();
 
     void siftDown(int);
 
-    int getSize() {
-        return heapSize;
-    };
-
     void increaseCapacity();
-
 };
 
 
-void Heap::insertKey(int k) {
-    heapSize++;
+void Heap::insertKey(int k){
     if (heapSize == capacity) {
         increaseCapacity();
     }
-    arr[heapSize - 1] = k;
+
+    arr[heapSize] = k;
+    heapSize++;
     siftUp();
 }
 
 void Heap::siftUp() {
     int i = heapSize - 1;
     while (i != 0 && arr[parent(i)] > arr[i]) {
-        swap(&arr[i], &arr[parent(i)]);
+        swap(arr[i], arr[parent(i)]);
         i = parent(i);
     }
 }
@@ -100,21 +99,20 @@ void Heap::siftDown(int i) {
     if (r < heapSize && arr[r] < arr[smallest])
         smallest = r;
     if (smallest != i) {
-        swap(&arr[i], &arr[smallest]);
+        swap(arr[i], arr[smallest]);
         siftDown(smallest);
     }
 }
 
-void swap(int *x, int *y) {
-    int temp = *x;
-    *x = *y;
-    *y = temp;
+void swap(int &x, int &y) {
+    int temp = x;
+    x = y;
+    y = temp;
 }
 
 int main() {
-    string size;
-    std::getline(cin, size);
-    int heapSize = std::stoi(size);
+    int heapSize;
+    std::cin >> heapSize;
     Heap heap;
     int k;
 
