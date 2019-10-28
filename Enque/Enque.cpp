@@ -3,6 +3,7 @@
 //
 
 #include <algorithm>
+#include <iostream>
 #include "Enque.h"
 
 void Enque::push_back(int k){
@@ -66,4 +67,44 @@ void Enque::increaseCapacity() {
         a = newArr;
     }
     capacity *= 2;
+}
+
+int main() {
+    Enque e;
+    int n;
+    int cmd;
+    int num;
+    bool correct = true;
+
+    std::cin >> n;
+
+    for (size_t i = 0; i < n; ++i) {
+        std::cin >> cmd >> num;
+
+        switch (cmd) {
+            case 1:
+                e.push_front(num);
+                break;
+            case 2:
+                correct = num == e.pop_front();
+                break;
+            case 3:
+                e.push_back(num);
+                break;
+            case 4:
+                correct = num == e.pop_back();
+                break;
+            default:
+                break;
+        }
+    }
+
+    if (!correct) {
+        std::cout << "NO";
+    } else {
+        std::cout << "YES";
+    }
+    std::cout << std::endl;
+
+    return 0;
 }
