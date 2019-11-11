@@ -3,4 +3,4 @@ project(made-cpp)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(made-cpp main.cpp Enque/Enque.cpp Enque/Enque.h)
+add_executable(made-cpp main.cpp)

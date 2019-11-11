@@ -110,7 +110,7 @@ void swap(int &x, int &y) {
     y = temp;
 }
 
-int main() {
+int heapMain() {
     int heapSize;
     std::cin >> heapSize;
     Heap heap;
