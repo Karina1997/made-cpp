@@ -69,7 +69,7 @@ void Enque::increaseCapacity() {
     capacity *= 2;
 }
 
-int main() {
+int enqueMain() {
     Enque e;
     int n;
     int cmd;
