@@ -18,6 +18,7 @@ private:
     public:
         explicit Node(int value) : value(value) {}
 
+
         int getValue() { return value; }
 
         Node *getLeftChild() const {
@@ -36,15 +37,20 @@ private:
             Node::rightChild = rightChild;
         }
 
+
     };
 
 
     Node *root = nullptr;
 
+    void delete_subtree(Node *node);
+
 public:
     void addLeave(int value);
 
     std::string inOrderTraversal();
+
+    virtual ~BinaryTree();
 };
 
 #endif //MADE_CPP_BINARYTREE_H

@@ -48,6 +48,17 @@ std::string BinaryTree::inOrderTraversal() {
     }
 }
 
+BinaryTree::~BinaryTree() {
+        delete_subtree(root);
+}
+
+void BinaryTree::delete_subtree(Node* node) {
+    if (!node) return;
+    delete_subtree(node->getRightChild());
+    delete_subtree(node->getLeftChild());
+    delete node;
+}
+
 int binaryTreeMain() {
     BinaryTree binaryTree = BinaryTree();
     int size;
