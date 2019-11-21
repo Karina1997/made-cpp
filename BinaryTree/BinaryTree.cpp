@@ -49,6 +49,7 @@ std::string BinaryTree::inOrderTraversal() {
 
 BinaryTree::~BinaryTree() {
     deleteTree(root);
+    root = nullptr;
 }
 
 void BinaryTree::deleteTree(Node* root)

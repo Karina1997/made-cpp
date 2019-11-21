@@ -41,7 +41,7 @@ private:
 
     Node *root = nullptr;
 
-    void deleteTree(Node* node);
+    static void deleteTree(Node* node);
 
 public:
     void addLeave(int value);
