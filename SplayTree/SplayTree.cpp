@@ -63,7 +63,7 @@ void SplayTree::splay(Node *z) {
                 rightRotate(gPar);
                 rightRotate(par);
             } else {
-                // zag-zig
+                // zig-zag
                 rightRotate(par);
                 leftRotate(gPar);
             }
@@ -76,7 +76,7 @@ void SplayTree::splay(Node *z) {
                 leftRotate(gPar);
                 leftRotate(par);
             } else {
-                // zig-zag
+                // zag-zig
                 leftRotate(par);
                 rightRotate(gPar);
             }
@@ -99,16 +99,18 @@ int SplayTree::insert(int val) {
                 z->Left = t;
                 t->Parent = z;
                 break;
-            } else
+            } else {
                 z = z->Left;
+            }
         } else if (z->key < val) {
             z->number += 1;
             if (z->Right == nullptr) {
                 z->Right = t;
                 t->Parent = z;
                 break;
-            } else
+            } else {
                 z = z->Right;
+            }
         }
     }
     splay(t);
@@ -134,7 +136,7 @@ bool SplayTree::remove(int val) {
             root->Right->Parent = root;
         }
     }
-    free(z);
+    delete z;
     return true;
 }
 
@@ -169,7 +171,10 @@ int splayTreeMain() {
         if (a == 1) {
             res.push_back(s.insert(b));
         } else {
-            s.remove(b);
+            if (!s.remove(b)) {
+                std::cout << "No such element";
+                break;
+            }
         }
     }
     for (int re : res)
