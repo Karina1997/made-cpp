@@ -3,6 +3,7 @@
 //
 
 
+#include <queue>
 #include "BinaryTree.h"
 
 void BinaryTree::addLeave(int value) {
@@ -28,7 +29,6 @@ void BinaryTree::addLeave(int value) {
 }
 
 std::string BinaryTree::inOrderTraversal() {
-    {
         std::stack<Node> stack;
         Node *currentNode = root;
         std::string str;
@@ -45,22 +45,35 @@ std::string BinaryTree::inOrderTraversal() {
             }
         }
         return str;
-    }
 }
 
 BinaryTree::~BinaryTree() {
-        delete_subtree(root);
+    deleteTree(root);
 }
 
-void BinaryTree::delete_subtree(Node* node) {
-    if (!node) return;
-    delete_subtree(node->getRightChild());
-    delete_subtree(node->getLeftChild());
-    delete node;
+void BinaryTree::deleteTree(Node* root)
+{
+    if (root == nullptr)
+        return;
+
+    std::queue<Node *> q;
+    q.push(root);
+    while (!q.empty())
+    {
+        Node* node = q.front();
+        q.pop();
+
+        if (node->getLeftChild() != nullptr)
+            q.push(node->getLeftChild());
+        if (node->getRightChild() != nullptr)
+            q.push(node->getRightChild());
+
+       delete node;
+    }
 }
 
 int binaryTreeMain() {
-    BinaryTree binaryTree = BinaryTree();
+    BinaryTree binaryTree;
     int size;
     std::cin >> size;
     int numberToAdd;

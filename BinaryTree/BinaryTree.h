@@ -36,14 +36,12 @@ private:
         void setRightChild(Node *rightChild) {
             Node::rightChild = rightChild;
         }
-
-
     };
 
 
     Node *root = nullptr;
 
-    void delete_subtree(Node *node);
+    void deleteTree(Node* node);
 
 public:
     void addLeave(int value);
