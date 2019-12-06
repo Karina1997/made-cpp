@@ -10,7 +10,7 @@ HashTable::~HashTable() {
     }
 }
 
-size_t HashTable::Hash(const char *str, size_t a) {
+size_t HashTable::Hash (const char *str, size_t a) const {
     size_t hash = 0;
     for (; *str != 0; ++str) {
         hash = (hash * a + *str) % m;
@@ -38,6 +38,18 @@ bool HashTable::Has(const std::string &key) {
 bool HashTable::Add(const std::string &key) {
     assert(!key.empty());
 
+    resize();
+
+    size_t hash = Hash(key.c_str(), a1);
+    auto newNode = new HashTableNode(key, hash);
+    bool ifPutted = PutToTable(table, newNode);
+    if (ifPutted) {
+        size++;
+    }
+    return ifPutted;
+}
+
+void HashTable::resize() {
     if (4 * size >= 3 * table.size()) {
         std::vector<HashTableNode *> newTable = std::vector<HashTableNode *>(table.size() * 2);
         for (HashTableNode *elem: table) {
@@ -47,14 +59,6 @@ bool HashTable::Add(const std::string &key) {
         }
         table = newTable;
     }
-
-    size_t hash = Hash(key.c_str(), a1);
-    auto newNode = new HashTableNode(key, hash);
-    bool ifPutted = PutToTable(table, newNode);
-    if (ifPutted) {
-        size++;
-    }
-    return ifPutted;
 }
 
 bool HashTable::Remove(const std::string &key) {
@@ -88,6 +92,7 @@ bool HashTable::PutToTable(std::vector<HashTableNode *> &vector, HashTable::Hash
     int i = 0;
     while (vector[hash % vector.size()] != nullptr && vector[hash % vector.size()]->ifPresent) {
         if (vector[hash % vector.size()]->key == node->key) {
+            delete(node);
             return false;
         }
         i++;

@@ -37,7 +37,7 @@ public:
     bool Remove(const std::string &key);
 
 private:
-    size_t Hash(const char *str, size_t a);
+    size_t Hash(const char *str, size_t a) const;
 
     size_t NextHash(const char *str, size_t i);
 
@@ -53,6 +53,8 @@ private:
     size_t size = 0;
 
     bool PutToTable(std::vector<HashTableNode *> & vector, HashTableNode *node);
+
+    void resize();
 };
 
 
