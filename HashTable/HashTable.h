@@ -42,17 +42,18 @@ private:
     size_t NextHash(const char *str, size_t i);
 
     struct HashTableNode {
-        std::string key;
+        std::string key = "";
         bool ifPresent = true;
         size_t hash;
 
+        HashTableNode() {}
         HashTableNode(std::string key, size_t hash) : key(std::move(key)), hash(hash) {}
     };
 
-    std::vector<HashTableNode *> table;
+    std::vector<HashTableNode> table;
     size_t size = 0;
 
-    bool PutToTable(std::vector<HashTableNode *> & vector, HashTableNode *node);
+    bool PutToTable(std::vector<HashTableNode> & vector, const std::string& key);
 
     void resize();
 };
