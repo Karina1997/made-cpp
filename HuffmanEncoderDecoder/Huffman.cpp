@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include <list>
+#include <queue>
 #include "Huffman.h"
 
 using namespace std;
@@ -60,6 +61,27 @@ Node *buildTree(map<byte, int> *freq) {
     }
 
     return t.front();
+}
+
+void deleteTree(Node* root)
+{
+    if (root == nullptr)
+        return;
+
+    queue<Node *> q;
+    q.push(root);
+    while (!q.empty())
+    {
+        Node* node = q.front();
+        q.pop();
+
+        if (node->left != nullptr)
+            q.push(node->left);
+        if (node->right != nullptr)
+            q.push(node->right);
+
+        delete node;
+    }
 }
 
 void readLong(IInputStream &compressed, ulong &total) {
@@ -137,6 +159,7 @@ void Encode(IInputStream &original, IOutputStream &compressed) {
     map<char, vector<bool>> table;
     vector<bool> code;
     BuildTable(*root, table, code);
+    deleteTree(root);
 
     vector<byte> outBuffer;
     ulong totalBits = 0;
@@ -176,6 +199,7 @@ void Decode(IInputStream &compressed, IOutputStream &original) {
     map<char, vector<bool>> table;
     vector<bool> code;
     BuildTable(*root, table,code);
+    deleteTree(root);
 
     Node *p = root;
     int count = 0;
