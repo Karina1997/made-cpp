@@ -1,39 +1,36 @@
-//
-// Created by Карина Зайнуллина on 29/11/2019.
-//
-
-
 #include <vector>
 #include <map>
-#include <list>
 #include <queue>
+#include <list>
+#include <fstream>
 #include "Huffman.h"
 
 using namespace std;
 
 class Node {
 public:
-    int a = 0;
-    char c = -1;
+    int a;
+    char c;
     Node *left = nullptr, *right = nullptr;
-    Node(Node *left, Node *right) : left(left), right(right) {a = left->a + right->a;}
+
+    Node(Node *left, Node *right) : left(left), right(right) { a = left->a + right->a; }
 
     Node(int a, char c) : a(a), c(c) {}
-
-    bool operator < (Node * node){
-        return this->a < node->a;
-    }
 };
 
-void BuildTable(Node &root, map<char, vector<bool>> &table, vector<bool> &code) {
+struct MyCompare {
+    bool operator()(const Node *l, const Node *r) const { return l->a < r->a; }
+};
+
+void buildTable(Node &root, map<char, vector<bool>> &table, vector<bool> &code) {
     if (root.left != nullptr) {
         code.push_back(false);
-        BuildTable(*root.left, table, code);
+        buildTable(*root.left, table, code);
     }
 
     if (root.right != nullptr) {
         code.push_back(true);
-        BuildTable(*root.right, table, code);
+        buildTable(*root.right, table, code);
     }
 
     if (root.left == nullptr && root.right == nullptr) table[root.c] = code;
@@ -43,13 +40,13 @@ void BuildTable(Node &root, map<char, vector<bool>> &table, vector<bool> &code) 
 
 Node *buildTree(map<byte, int> *freq) {
     list<Node *> t;
-    for (auto & itr : *freq) {
-        Node *p = Node(itr.first, itr.second);
+    for (auto &itr : *freq) {
+        Node *p = new Node(itr.second, itr.first);
         t.push_back(p);
     }
 
     while (t.size() != 1) {
-        t.sort();
+        t.sort(MyCompare());
 
         Node *SonL = t.front();
         t.pop_front();
@@ -63,16 +60,14 @@ Node *buildTree(map<byte, int> *freq) {
     return t.front();
 }
 
-void deleteTree(Node* root)
-{
+void deleteTree(Node *root) {
     if (root == nullptr)
         return;
 
     queue<Node *> q;
     q.push(root);
-    while (!q.empty())
-    {
-        Node* node = q.front();
+    while (!q.empty()) {
+        Node *node = q.front();
         q.pop();
 
         if (node->left != nullptr)
@@ -158,8 +153,7 @@ void Encode(IInputStream &original, IOutputStream &compressed) {
     Node *root = buildTree(&m);
     map<char, vector<bool>> table;
     vector<bool> code;
-    BuildTable(*root, table, code);
-    deleteTree(root);
+    buildTable(*root, table, code);
 
     vector<byte> outBuffer;
     ulong totalBits = 0;
@@ -186,6 +180,7 @@ void Encode(IInputStream &original, IOutputStream &compressed) {
     writeLong(compressed, totalBits);
     writeFrequencies(compressed, m);
     writeData(compressed, outBuffer);
+    deleteTree(root);
 }
 
 void Decode(IInputStream &compressed, IOutputStream &original) {
@@ -198,8 +193,7 @@ void Decode(IInputStream &compressed, IOutputStream &original) {
     Node *root = buildTree(&m);
     map<char, vector<bool>> table;
     vector<bool> code;
-    BuildTable(*root, table,code);
-    deleteTree(root);
+    buildTable(*root, table, code);
 
     Node *p = root;
     int count = 0;
@@ -219,4 +213,6 @@ void Decode(IInputStream &compressed, IOutputStream &original) {
             hasNext = compressed.Read(next);
         }
     }
+
+    deleteTree(root);
 }
