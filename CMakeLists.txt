@@ -3,4 +3,4 @@ project(made-cpp)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(made-cpp main.cpp)
+add_executable(made-cpp main.cpp HuffmanEncoderDecoder/Huffman.cpp)
